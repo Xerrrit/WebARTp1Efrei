@@ -5,9 +5,9 @@
   </head>
   <body>
     <a-scene arjs>
-      <a-box position="2 2 -3" rotation="0 0 0" color="#4CC3D9"></a-box>
-      <a-box position="0 2 -3" rotation="0 0 0" color="#EZcx29"></a-box>
-      <a-box position="-2 2 -3" rotation="0 0 0" color="#2f2f2f"></a-box>
+      <a-box position="2 2 0" rotation="0 0 0" color="#4CC3D9"></a-box>
+      <a-box position="0 2 0" rotation="0 0 0" color="#EZcx29"></a-box>
+      <a-box position="-2 2 0" rotation="0 0 0" color="#2f2f2f"></a-box>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
       <a-camera position="0 10 5" wasd-controls-enabled="true"></a-camera>
       <a-sky color="#ECECEC"></a-sky>
@@ -16,9 +16,10 @@
         <a-box
           color="#4CC3D9"
           material="transparent: true; opacity: 0.5"
-          width="10"
-          height="10"
-          depth="10"
+          width="2"
+          height="2"
+          depth="2"
+          position="0 5 0"
           animation="property: rotation; to: 0 360 0; loop: true; dur: 2000; easing: linear">
         </a-box>
       </a-marker>
