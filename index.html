@@ -20,30 +20,5 @@
         </a-box>
       </a-marker>
 
-      <a-entity camera look-controls>
-        <a-cursor
-          raycaster="objects: .clickable"
-          fuse="false"
-          color="#ffffff">
-        </a-cursor>
-      </a-entity>
-    </a-scene>
-
-    <script>
-      const box = document.getElementById('interactiveBox');
-      const colors = ['#4CC3D9', '#FF5733', '#2ECC71', '#F1C40F'];
-      let currentColorIndex = 0;
-
-      function changeColor() {
-        currentColorIndex = (currentColorIndex + 1) % colors.length;
-        box.setAttribute('color', colors[currentColorIndex]);
-      }
-
-      box.addEventListener('click', changeColor);
-      box.addEventListener('touchstart', function (event) {
-        event.preventDefault();
-        changeColor();
-      });
-    </script>
   </body>
 </html>
