@@ -16,75 +16,6 @@
         padding: 10px;
       }
     </style>
-
-    <script>
-      window.addEventListener('DOMContentLoaded', function () {
-        const box = document.getElementById('interactiveBox');
-        const marker = document.getElementById('hiroMarker');
-        const ui = document.getElementById('ui');
-        const slider = document.getElementById('sizeSlider');
-
-        const colors = [
-          '#4CC3D9',
-          '#FF5733',
-          '#2ECC71',
-          '#F1C40F'
-        ];
-
-        let currentColorIndex = 0;
-
-        function changeColor() {
-          currentColorIndex =
-            (currentColorIndex + 1) % colors.length;
-
-          box.setAttribute(
-            'color',
-            colors[currentColorIndex]
-          );
-
-          box.setAttribute('animation', {
-            property: 'rotation',
-            to: '0 360 0',
-            loop: true,
-            dur: 500,
-            easing: 'linear'
-          });
-
-          box.setAttribute(
-            'scale',
-            '1.5 1.5 1.5'
-          );
-        }
-
-        box.addEventListener('click', changeColor);
-
-        box.addEventListener('touchstart', function (event) {
-          event.preventDefault();
-          changeColor();
-        });
-
-        // UI visible seulement avec Hiro
-        ui.style.display = 'none';
-
-        marker.addEventListener('markerFound', function () {
-          ui.style.display = 'block';
-        });
-
-        marker.addEventListener('markerLost', function () {
-          ui.style.display = 'none';
-        });
-
-        // Slider
-        slider.addEventListener('input', function () {
-          const size = this.value;
-
-          box.setAttribute(
-            'scale',
-            size + ' ' + size + ' ' + size
-          );
-        });
-      });
-    </script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
@@ -98,7 +29,14 @@
         max="3"
         step="0.1"
         value="1"
-      />
+      >
+
+      <br><br>
+
+      Couleur :
+      <button id="red">Rouge</button>
+      <button id="green">Vert</button>
+      <button id="blue">Bleu</button>
     </div>
 
     <a-scene
@@ -107,7 +45,6 @@
       vr-mode-ui="enabled: false"
     >
 
-      <!-- Marqueur Hiro -->
       <a-marker id="hiroMarker" preset="hiro">
 
         <a-box
@@ -131,35 +68,108 @@
 
       </a-marker>
 
-      <!-- Marqueur personnalisé -->
       <a-marker
         type="pattern"
         url="pattern-marker.patt"
       >
-        <a-triangle 
-          color="green" 
-          vertex-a="0 1 0" 
-          vertex-b="-1 -1 0" 
-          vertex-c="1 -1 0" 
+        <a-triangle
+          color="green"
+          vertex-a="0 1 0"
+          vertex-b="-1 -1 0"
+          vertex-c="1 -1 0"
           position="0 1 0"
           rotation="-90 0 0"
         >
         </a-triangle>
       </a-marker>
 
-      <!-- Caméra + curseur -->
       <a-entity camera>
-
         <a-cursor
           raycaster="objects: .clickable"
           fuse="false"
           color="#FFFFFF"
         >
         </a-cursor>
-
       </a-entity>
 
     </a-scene>
+
+    <script>
+      const box = document.getElementById('interactiveBox');
+      const marker = document.getElementById('hiroMarker');
+      const ui = document.getElementById('ui');
+      const slider = document.getElementById('sizeSlider');
+
+      const colors = [
+        '#4CC3D9',
+        '#FF5733',
+        '#2ECC71',
+        '#F1C40F'
+      ];
+
+      let currentColorIndex = 0;
+
+      function changeColor() {
+        currentColorIndex =
+          (currentColorIndex + 1) % colors.length;
+
+        box.setAttribute(
+          'color',
+          colors[currentColorIndex]
+        );
+
+        box.setAttribute('animation', {
+          property: 'rotation',
+          to: '0 360 0',
+          loop: true,
+          dur: 500,
+          easing: 'linear'
+        });
+
+        box.setAttribute(
+          'scale',
+          '1.5 1.5 1.5'
+        );
+      }
+
+      box.addEventListener('click', changeColor);
+
+      box.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+        changeColor();
+      });
+
+      ui.style.display = 'none';
+
+      marker.addEventListener('markerFound', function () {
+        ui.style.display = 'block';
+      });
+
+      marker.addEventListener('markerLost', function () {
+        ui.style.display = 'none';
+      });
+
+      slider.addEventListener('input', function () {
+        const size = this.value;
+
+        box.setAttribute(
+          'scale',
+          size + ' ' + size + ' ' + size
+        );
+      });
+
+      document.getElementById('red').addEventListener('click', function () {
+        box.setAttribute('color', 'red');
+      });
+
+      document.getElementById('green').addEventListener('click', function () {
+        box.setAttribute('color', 'green');
+      });
+
+      document.getElementById('blue').addEventListener('click', function () {
+        box.setAttribute('color', 'blue');
+      });
+    </script>
 
   </body>
 </html>
