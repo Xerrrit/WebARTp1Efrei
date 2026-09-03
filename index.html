@@ -14,6 +14,14 @@
         z-index: 999;
         background: white;
         padding: 10px;
+        touch-action: manipulation;
+        pointer-events: auto;
+      }
+
+      #ui button,
+      #ui input {
+        touch-action: manipulation;
+        pointer-events: auto;
       }
     </style>
   </head>
@@ -158,17 +166,37 @@
         );
       });
 
-      document.getElementById('red').addEventListener('click', function () {
-        box.setAttribute('color', 'red');
-      });
+      // --- UI : on bloque la propagation des touch events d'AR.js sur la zone UI ---
+      // (au cas où AR.js pose un preventDefault global en phase de capture)
+      ui.addEventListener('touchstart', function (event) {
+        event.stopPropagation();
+      }, { capture: true });
 
-      document.getElementById('green').addEventListener('click', function () {
-        box.setAttribute('color', 'green');
-      });
+      ui.addEventListener('touchmove', function (event) {
+        event.stopPropagation();
+      }, { capture: true });
 
-      document.getElementById('blue').addEventListener('click', function () {
-        box.setAttribute('color', 'blue');
-      });
+      ui.addEventListener('touchend', function (event) {
+        event.stopPropagation();
+      }, { capture: true });
+
+      // --- Boutons de couleur : double gestion click + touchend ---
+      function bindColorButton(id, color) {
+        const el = document.getElementById(id);
+
+        function handler(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          box.setAttribute('color', color);
+        }
+
+        el.addEventListener('click', handler);
+        el.addEventListener('touchend', handler);
+      }
+
+      bindColorButton('red', 'red');
+      bindColorButton('green', 'green');
+      bindColorButton('blue', 'blue');
     </script>
 
   </body>
