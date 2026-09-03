@@ -1,24 +1,102 @@
+```html
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
+
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+
+    <!-- AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+    <script>
+      // On attend que la scène soit complètement chargée
+      AFRAME.registerComponent('interactive-box', {
+        init: function () {
+          const box = this.el;
+
+          const colors = [
+            '#4CC3D9',
+            '#FF5733',
+            '#2ECC71',
+            '#F1C40F'
+          ];
+
+          let currentColorIndex = 0;
+
+          box.addEventListener('click', function () {
+            // Changement de couleur
+            currentColorIndex =
+              (currentColorIndex + 1) % colors.length;
+
+            box.setAttribute(
+              'color',
+              colors[currentColorIndex]
+            );
+
+            // Accélère la rotation
+            box.setAttribute('animation', {
+              property: 'rotation',
+              to: '0 360 0',
+              loop: true,
+              dur: 500,
+              easing: 'linear'
+            });
+
+            // Agrandissement temporaire
+            box.setAttribute('scale', '1.5 1.5 1.5');
+          });
+        }
+      });
+    </script>
   </head>
+
   <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+    >
+
+      <!-- Marqueur Hiro -->
       <a-marker preset="hiro">
+
+        <!-- Boîte interactive -->
         <a-box
-          id="interactiveBox"
           class="clickable"
+          interactive-box
           color="#4CC3D9"
           material="transparent: true; opacity: 0.5"
-          width="10"
-          height="10"
-          depth="10"
-          position="0 0.75 0"
-          animation="property: rotation; to: 0 360 0; loop: true; dur: 2000; easing: linear">
+          width="2"
+          height="2"
+          depth="2"
+          position="0 1 0"
+          animation="
+            property: rotation;
+            to: 0 360 0;
+            loop: true;
+            dur: 2000;
+            easing: linear
+          "
+        >
         </a-box>
+
       </a-marker>
+
+      <!-- Caméra + curseur -->
+      <a-entity camera>
+        <a-cursor
+          raycaster="objects: .clickable"
+          fuse="false"
+          color="#FFFFFF"
+        >
+        </a-cursor>
+      </a-entity>
+
+    </a-scene>
 
   </body>
 </html>
+```
