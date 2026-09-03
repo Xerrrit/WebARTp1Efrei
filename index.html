@@ -1,58 +1,105 @@
-```html
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
 
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
-
-    <!-- AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
+    <style>
+      #ui {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 999;
+        background: white;
+        padding: 10px;
+      }
+    </style>
+
     <script>
-      // On attend que la scène soit complètement chargée
-      AFRAME.registerComponent('interactive-box', {
-        init: function () {
-          const box = this.el;
+      window.addEventListener('DOMContentLoaded', function () {
+        const box = document.getElementById('interactiveBox');
+        const marker = document.getElementById('hiroMarker');
+        const ui = document.getElementById('ui');
+        const slider = document.getElementById('sizeSlider');
 
-          const colors = [
-            '#4CC3D9',
-            '#FF5733',
-            '#2ECC71',
-            '#F1C40F'
-          ];
+        const colors = [
+          '#4CC3D9',
+          '#FF5733',
+          '#2ECC71',
+          '#F1C40F'
+        ];
 
-          let currentColorIndex = 0;
+        let currentColorIndex = 0;
 
-          box.addEventListener('click', function () {
-            // Changement de couleur
-            currentColorIndex =
-              (currentColorIndex + 1) % colors.length;
+        function changeColor() {
+          currentColorIndex =
+            (currentColorIndex + 1) % colors.length;
 
-            box.setAttribute(
-              'color',
-              colors[currentColorIndex]
-            );
+          box.setAttribute(
+            'color',
+            colors[currentColorIndex]
+          );
 
-            // Accélère la rotation
-            box.setAttribute('animation', {
-              property: 'rotation',
-              to: '0 360 0',
-              loop: true,
-              dur: 500,
-              easing: 'linear'
-            });
-
-            // Agrandissement temporaire
-            box.setAttribute('scale', '1.5 1.5 1.5');
+          box.setAttribute('animation', {
+            property: 'rotation',
+            to: '0 360 0',
+            loop: true,
+            dur: 500,
+            easing: 'linear'
           });
+
+          box.setAttribute(
+            'scale',
+            '1.5 1.5 1.5'
+          );
         }
+
+        box.addEventListener('click', changeColor);
+
+        box.addEventListener('touchstart', function (event) {
+          event.preventDefault();
+          changeColor();
+        });
+
+        // UI visible seulement avec Hiro
+        ui.style.display = 'none';
+
+        marker.addEventListener('markerFound', function () {
+          ui.style.display = 'block';
+        });
+
+        marker.addEventListener('markerLost', function () {
+          ui.style.display = 'none';
+        });
+
+        // Slider
+        slider.addEventListener('input', function () {
+          const size = this.value;
+
+          box.setAttribute(
+            'scale',
+            size + ' ' + size + ' ' + size
+          );
+        });
       });
     </script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
+
+    <div id="ui">
+      Taille :
+      <input
+        id="sizeSlider"
+        type="range"
+        min="0.1"
+        max="3"
+        step="0.1"
+        value="1"
+      />
+    </div>
 
     <a-scene
       embedded
@@ -61,12 +108,11 @@
     >
 
       <!-- Marqueur Hiro -->
-      <a-marker preset="hiro">
+      <a-marker id="hiroMarker" preset="hiro">
 
-        <!-- Boîte interactive -->
         <a-box
+          id="interactiveBox"
           class="clickable"
-          interactive-box
           color="#4CC3D9"
           material="transparent: true; opacity: 0.5"
           width="2"
@@ -85,7 +131,11 @@
 
       </a-marker>
 
-      <a-marker type="pattern" url="pattern-marker.patt">
+      <!-- Marqueur personnalisé -->
+      <a-marker
+        type="pattern"
+        url="pattern-marker.patt"
+      >
         <a-triangle
           color="green"
           vertex-a="0 1 0"
@@ -98,16 +148,17 @@
 
       <!-- Caméra + curseur -->
       <a-entity camera>
+
         <a-cursor
           raycaster="objects: .clickable"
           fuse="false"
           color="#FFFFFF"
         >
         </a-cursor>
+
       </a-entity>
 
     </a-scene>
 
   </body>
 </html>
-```
